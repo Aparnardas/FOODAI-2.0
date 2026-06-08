@@ -1,0 +1,25 @@
+# Large model files
+best.pt
+*.pt
+*.h5
+*.pkl
+*.pth
+*.bin
+
+# Virtual environment
+foodenv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Dataset (large files)
+*.zip
+*.tar.gz
+
+# OS files
+.DS_Store
+Thumbs.db
