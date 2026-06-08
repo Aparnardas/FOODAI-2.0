@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* ===== PAGE ANIMATION ===== */
+.container-fluid {
+animation: fadeIn 0.6s ease;
+}
+
+/* ===== CARD ===== */
+
+.card{
+border-radius:18px;
+box-shadow:0 6px 16px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.card:hover{
+transform: translateY(-5px);
+}
+
+/* ===== HEADINGS ===== */
+
+.section-title{
+font-weight:600;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+gap:8px;
+color:#844FC1;
+}
+
+/* ===== INPUT ===== */
+
+.form-control, .form-select{
+border-radius:10px;
+transition:0.2s;
+}
+
+.form-control:focus, .form-select:focus{
+border-color:#844FC1;
+box-shadow:0 0 8px rgba(132,79,193,0.2);
+}
+
+/* ===== SUMMARY BOX ===== */
+
+.summary-box{
+padding:15px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.summary-box:hover{
+transform: scale(1.05);
+}
+
+/* ===== BUTTON ===== */
+
+.btn-primary{
+background:linear-gradient(135deg,#844FC1,#a78bfa);
+border:none;
+border-radius:12px;
+font-weight:600;
+padding:12px;
+transition:0.3s;
+}
+
+.btn-primary:hover{
+transform: scale(1.03);
+}
+
+/* ===== BMI COLORS ===== */
+
+.bmi-under { color:#3b82f6; }
+.bmi-normal { color:#22c55e; }
+.bmi-over { color:#f59e0b; }
+.bmi-obese { color:#ef4444; }
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+</style>
+
+
+<div class="container-fluid">
+
+<!-- HEADER -->
+
+<div class="mb-4">
+<h3 class="fw-bold">👤 Health Profile</h3>
+<p class="text-muted">Manage your personal health and nutrition data</p>
+</div>
+
+<form method="post" action="{{ url_for('profile') }}">
+
+<div class="row">
+
+<!-- LEFT COLUMN -->
+
+<div class="col-md-6">
+
+<!-- BASIC INFO -->
+
+<div class="card p-4 mb-4">
+
+<h5 class="section-title">🧍 Basic Information</h5>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Name</label>
+<input type="text" name="name" class="form-control"
+value="{{ user.name if user }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Age</label>
+<input type="number" name="age" class="form-control"
+value="{{ user.age if user }}" required>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Gender</label>
+<select name="gender" class="form-select">
+<option value="male" {% if user.gender=="male" %}selected{% endif %}>Male</option>
+<option value="female" {% if user.gender=="female" %}selected{% endif %}>Female</option>
+</select>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Allergy</label>
+<input type="text" name="allergy" class="form-control"
+value="{{ user.allergy if user }}"
+placeholder="Ex: peanut">
+</div>
+
+</div>
+
+</div>
+
+<!-- BODY METRICS -->
+
+<div class="card p-4 mb-4">
+
+<h5 class="section-title">⚖️ Body Metrics</h5>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Weight (kg)</label>
+<input type="number" name="weight" class="form-control"
+value="{{ user.weight if user }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Height (cm)</label>
+<input type="number" name="height" class="form-control"
+value="{{ user.height if user }}" required>
+</div>
+
+</div>
+
+</div>
+
+<!-- BMI CARD -->
+
+<div class="card p-4 mb-4">
+
+<h5 class="section-title">📏 BMI Calculator</h5>
+
+<div class="row text-center">
+
+<div class="col-md-6 mb-3">
+<div class="summary-box bg-info-subtle">
+<h6>Your BMI</h6>
+<h4 id="bmiValue">--</h4>
+</div>
+</div>
+
+<div class="col-md-6 mb-3">
+<div class="summary-box bg-secondary-subtle">
+<h6>Category</h6>
+<h4 id="bmiCategory">--</h4>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT COLUMN -->
+
+<div class="col-md-6">
+
+<!-- HEALTH -->
+
+<div class="card p-4 mb-4">
+
+<h5 class="section-title">🏃 Health & Lifestyle</h5>
+
+<div class="mb-3">
+<label>Activity Level</label>
+<select name="activity" class="form-select">
+<option value="sedentary" {% if user.activity=="sedentary" %}selected{% endif %}>Sedentary</option>
+<option value="light" {% if user.activity=="light" %}selected{% endif %}>Light Activity</option>
+<option value="moderate" {% if user.activity=="moderate" %}selected{% endif %}>Moderate</option>
+<option value="active" {% if user.activity=="active" %}selected{% endif %}>Active</option>
+<option value="very_active" {% if user.activity=="very_active" %}selected{% endif %}>Very Active</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Diet Preference</label>
+<select name="diet" class="form-select">
+<option value="normal" {% if user.diet=="normal" %}selected{% endif %}>Normal</option>
+<option value="vegetarian" {% if user.diet=="vegetarian" %}selected{% endif %}>Vegetarian</option>
+<option value="vegan" {% if user.diet=="vegan" %}selected{% endif %}>Vegan</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Health Condition</label>
+<select name="condition" class="form-select">
+<option value="none" {% if user.condition=="none" %}selected{% endif %}>None</option>
+<option value="diabetes" {% if user.condition=="diabetes" %}selected{% endif %}>Diabetes</option>
+<option value="hypertension" {% if user.condition=="hypertension" %}selected{% endif %}>Hypertension</option>
+<option value="obesity" {% if user.condition=="obesity" %}selected{% endif %}>Obesity</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Daily Calorie Goal</label>
+<input type="number" name="goal" class="form-control"
+value="{{ user.goal if user }}"
+placeholder="Ex: 2000">
+</div>
+
+</div>
+
+<!-- SUMMARY -->
+
+{% if daily_limit %}
+
+<div class="card p-4">
+
+<h5 class="section-title">📊 Health Summary</h5>
+
+<div class="row text-center">
+
+<div class="col-md-6">
+<div class="summary-box bg-warning-subtle">
+<h6>BMR</h6>
+<h4 class="text-warning">{{ bmr }} kcal</h4>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="summary-box bg-success-subtle">
+<h6>Daily Limit</h6>
+<h4 class="text-success">{{ daily_limit }} kcal</h4>
+</div>
+</div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<!-- SAVE BUTTON -->
+
+<button class="btn btn-primary w-100 mt-3">
+💾 Save Health Profile
+</button>
+
+</form>
+
+</div>
+
+
+<!-- ===== BMI SCRIPT ===== -->
+
+<script>
+
+function calculateBMI(){
+
+let weight = parseFloat(document.querySelector('[name="weight"]').value);
+let height = parseFloat(document.querySelector('[name="height"]').value);
+
+if(!weight || !height){
+    document.getElementById("bmiValue").innerText = "--";
+    document.getElementById("bmiCategory").innerText = "--";
+    return;
+}
+
+height = height / 100;
+
+let bmi = (weight / (height * height)).toFixed(1);
+
+let category = "";
+let className = "";
+
+if(bmi < 18.5){
+    category = "Underweight";
+    className = "bmi-under";
+}
+else if(bmi < 25){
+    category = "Normal";
+    className = "bmi-normal";
+}
+else if(bmi < 30){
+    category = "Overweight";
+    className = "bmi-over";
+}
+else{
+    category = "Obese";
+    className = "bmi-obese";
+}
+
+let bmiValue = document.getElementById("bmiValue");
+let bmiCategory = document.getElementById("bmiCategory");
+
+bmiValue.innerText = bmi;
+bmiCategory.innerText = category;
+
+bmiValue.className = className;
+bmiCategory.className = className;
+
+}
+
+// AUTO UPDATE
+document.querySelector('[name="weight"]').addEventListener("input", calculateBMI);
+document.querySelector('[name="height"]').addEventListener("input", calculateBMI);
+
+// LOAD
+window.onload = calculateBMI;
+
+</script>
+
+{% endblock %}
